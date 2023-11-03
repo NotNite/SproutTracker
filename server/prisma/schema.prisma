@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  username   String      @id
+  key        String      @default(uuid())
+  characters Character[]
+}
+
+model Character {
+  contentId BigInt @id
+  name      String
+  world     String
+
+  user         User   @relation(fields: [userUsername], references: [username])
+  userUsername String
+
+  questProgress QuestProgression[]
+}
+
+model QuestProgression {
+  id   String   @id @default(uuid())
+  time DateTime @default(now())
+
+  character          Character @relation(fields: [characterContentId], references: [contentId])
+  characterContentId BigInt
+
+  quest    Int
+  sequence Int
+  complete Boolean
+}
