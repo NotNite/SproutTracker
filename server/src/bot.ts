@@ -109,9 +109,12 @@ bot.on("interactionCreate", async (interaction) => {
                 }
               ],
               timestamp: progression.time.toISOString(),
-              image: {
-                url: "https://xivapi.com" + quest.IconHD
-              }
+              image:
+                quest.IconHD !== ""
+                  ? {
+                      url: "https://xivapi.com" + quest.IconHD
+                    }
+                  : undefined
             }
           ]
         });
