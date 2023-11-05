@@ -86,6 +86,7 @@ bot.on("interactionCreate", async (interaction) => {
           embeds: [
             {
               title: quest.Name,
+              description: `${char.name} @ ${char.world}`,
               fields: [
                 {
                   name: "Objective",
@@ -100,6 +101,11 @@ bot.on("interactionCreate", async (interaction) => {
                 {
                   name: "Level",
                   value: quest.ClassJobLevel0.toString(),
+                  inline: true
+                },
+                {
+                  name: "Expansion",
+                  value: quest.Expansion.Name,
                   inline: true
                 },
                 {

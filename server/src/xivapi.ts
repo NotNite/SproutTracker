@@ -17,6 +17,10 @@ export type TextData = {
   ToDo: ToDo[];
 };
 
+export type Expansion = {
+  Name: string;
+};
+
 export type Quest = {
   Name: string;
   IconHD: string;
@@ -25,6 +29,7 @@ export type Quest = {
   IssuerLocation: {
     Territory: Territory;
   };
+  Expansion: Expansion;
 };
 
 async function getSheet<T>(name: string, row: number) {
