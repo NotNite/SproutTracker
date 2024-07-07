@@ -13,7 +13,7 @@ public sealed class Plugin : IDalamudPlugin {
     public static ConfigWindow ConfigWindow = null!;
     public static MsqTracker MsqTracker = null!;
 
-    public Plugin(DalamudPluginInterface pluginInterface) {
+    public Plugin(IDalamudPluginInterface pluginInterface) {
         pluginInterface.Create<Services>();
 
         Configuration = Services.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
