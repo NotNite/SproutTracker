@@ -6,7 +6,7 @@ import {
   Constants
 } from "@projectdysnomia/dysnomia";
 import { getCharacterFromCID, getCharacters, getLatestProgression } from "./db";
-import { getQuest } from "./xivapi";
+import { getQuest, getTodo } from "./xivapi";
 
 const bot = new Client(`Bot ${process.env.DISCORD_TOKEN}`);
 
@@ -76,11 +76,14 @@ bot.on("interactionCreate", async (interaction) => {
           break;
         }
 
-        const todoIdx =
-          progression.sequence === 255
-            ? quest.TextData.ToDo.length - 1
-            : progression.sequence - 1;
-        const todo = quest.TextData.ToDo.find((x) => x.Order === todoIdx);
+        const todoData = await getTodo(quest);
+        let todo = "Unknown";
+        if (todoData != null) {
+          const todoIdx = progression.sequence - 1;
+          todo = todoData[todoIdx] ?? "Unknown";
+        }
+
+        const icon = quest.Icon?.path_hr1;
 
         await interaction.createMessage({
           embeds: [
@@ -90,7 +93,7 @@ bot.on("interactionCreate", async (interaction) => {
               fields: [
                 {
                   name: "Objective",
-                  value: todo?.Text ?? "Unknown",
+                  value: todo,
                   inline: true
                 },
                 {
@@ -100,12 +103,12 @@ bot.on("interactionCreate", async (interaction) => {
                 },
                 {
                   name: "Level",
-                  value: quest.ClassJobLevel0.toString(),
+                  value: quest.ClassJobLevel[0].toString(),
                   inline: true
                 },
                 {
                   name: "Expansion",
-                  value: quest.Expansion.Name,
+                  value: quest.Expansion.fields.Name,
                   inline: true
                 },
                 {
@@ -116,9 +119,12 @@ bot.on("interactionCreate", async (interaction) => {
               ],
               timestamp: progression.time.toISOString(),
               image:
-                quest.IconHD !== ""
+                icon != null && icon !== ""
                   ? {
-                      url: "https://xivapi.com" + quest.IconHD
+                      url:
+                        "https://beta.xivapi.com/api/1/asset/" +
+                        icon +
+                        "?format=png"
                     }
                   : undefined
             }
