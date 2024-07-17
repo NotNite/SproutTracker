@@ -1,0 +1,13 @@
+name: sprouttracker
+services:
+  sprouttracker:
+    build:
+      context: .
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: file:/database.db
+    env_file: .env
+    ports:
+      - 8000:8000
+    volumes:
+      - ./database.db:/database.db

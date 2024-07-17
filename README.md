@@ -19,6 +19,7 @@ Then, run these commands to build and start the server:
 - `npm i -D`
 - `npm run prisma-generate`
 - `npm run build`
+- `npm run prisma-db-push`
 - `NODE_ENV=production npm run start`
 
 The `ADMIN_KEY` can then be used to create a new user:

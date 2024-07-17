@@ -19,7 +19,8 @@
   },
   "scripts": {
     "prisma-generate": "prisma generate",
+    "prisma-db-push": "prisma db push --skip-generate",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "npm run prisma-db-push && node dist/index.js"
   }
 }

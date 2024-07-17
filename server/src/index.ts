@@ -2,6 +2,8 @@ import "dotenv/config";
 import app from "./api";
 import bot from "./bot";
 
-console.log(`Listening on ${process.env.PORT}`);
+const port = process.env.PORT || 3000;
+
+console.log(`Listening on ${port}`);
 bot.connect();
-app.listen(process.env.PORT);
+app.listen(port);
