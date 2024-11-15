@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 
 namespace SproutTracker;
 
@@ -67,8 +67,7 @@ public class MsqTracker : IDisposable {
         if (cid == 0) return;
 
         var scenarioTree = Services.DataManager.GetExcelSheet<ScenarioTree>()!;
-        var row = scenarioTree.GetRow(progression.Quest | 0x10000U);
-        if (row != null) {
+        if (scenarioTree.TryGetRow(progression.Quest | 0x10000U, out var row)) {
             Services.PluginLog.Debug(
                 "Writing quest progression: scenario tree={ScenarioTree} quest={Quest} sequence={Sequence} complete={Complete}",
                 progression.Quest,

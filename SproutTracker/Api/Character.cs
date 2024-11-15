@@ -14,5 +14,5 @@ public class Character {
 
     [JsonInclude]
     [JsonPropertyName("world")]
-    public string World = Services.ClientState.LocalPlayer.HomeWorld.GameData!.Name.ToDalamudString().TextValue;
+    public string World = Services.ClientState.LocalPlayer.HomeWorld.Value.Name.ExtractText();
 }
