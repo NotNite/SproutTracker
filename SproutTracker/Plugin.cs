@@ -1,11 +1,14 @@
-﻿using Dalamud.Game.Command;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Dalamud.Game.Command;
 using Dalamud.Plugin;
 using Dalamud.Interface.Windowing;
+using Dalamud.IoC;
 using SproutTracker.Windows;
 
 namespace SproutTracker;
 
-public sealed class Plugin : IDalamudPlugin {
+public sealed class Plugin : IAsyncDalamudPlugin {
     public const string CommandName = "/sprouttracker";
 
     public static Configuration Configuration = null!;
@@ -13,8 +16,10 @@ public sealed class Plugin : IDalamudPlugin {
     public static ConfigWindow ConfigWindow = null!;
     public static MsqTracker MsqTracker = null!;
 
-    public Plugin(IDalamudPluginInterface pluginInterface) {
-        pluginInterface.Create<Services>();
+    [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
+
+    public Task LoadAsync(CancellationToken cancellationToken) {
+        PluginInterface.Create<Services>();
 
         Configuration = Services.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
         Configuration.Save();
@@ -31,9 +36,11 @@ public sealed class Plugin : IDalamudPlugin {
 
         Services.PluginInterface.UiBuilder.Draw += this.Draw;
         Services.PluginInterface.UiBuilder.OpenConfigUi += this.OpenConfigUi;
+        
+        return Task.CompletedTask;
     }
 
-    public void Dispose() {
+    public ValueTask DisposeAsync() {
         Services.PluginInterface.UiBuilder.Draw -= this.Draw;
         Services.PluginInterface.UiBuilder.OpenConfigUi -= this.OpenConfigUi;
         
@@ -45,6 +52,8 @@ public sealed class Plugin : IDalamudPlugin {
         ConfigWindow.Dispose();
         
         Configuration.Save();
+
+        return ValueTask.CompletedTask;
     }
 
     private void OnCommand(string command, string args) {
